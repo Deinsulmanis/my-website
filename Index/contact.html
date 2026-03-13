@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Contact - FixIt Pro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #ff6600; --primary-dark: #cc5200; --dark: #1a1a1a; --grey: #666; --white: #ffffff; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Barlow', sans-serif; background: var(--white); color: var(--dark); }
+    #loader { position: fixed; inset: 0; background: var(--dark); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease; }
+    #loader.hidden { opacity: 0; pointer-events: none; }
+    .spinner { width: 50px; height: 50px; border: 4px solid #444; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #scrollBtn { display: none; position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 18px; cursor: pointer; z-index: 999; transition: background 0.3s, transform 0.3s; box-shadow: 0 4px 15px rgba(255,102,0,0.4); }
+    #scrollBtn:hover { background: var(--primary-dark); transform: scale(1.1); }
+    nav { background: var(--dark); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 65px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon { background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .nav-logo span { color: white; font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+    .nav-logo span em { color: var(--primary); font-style: normal; }
+    .nav-links { display: flex; align-items: center; gap: 5px; }
+    .nav-links a { color: #aaa; text-decoration: none; padding: 8px 16px; border-radius: 5px; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover { color: white; background: rgba(255,255,255,0.08); }
+    .nav-links a.active { color: var(--primary); }
+    .nav-cta { background: var(--primary) !important; color: white !important; border-radius: 5px; }
+    .nav-cta:hover { background: var(--primary-dark) !important; }
+    .page-hero { background: var(--dark); color: white; padding: 80px 40px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: var(--primary); opacity: 0.05; border-radius: 50%; pointer-events: none; }
+    .section-tag { display: inline-block; background: rgba(255,102,0,0.1); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px; }
+    .page-hero .section-tag { background: rgba(255,102,0,0.15); border: 1px solid rgba(255,102,0,0.3); animation: fadeUp 0.6s ease both; }
+    .page-hero h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 58px; font-weight: 800; text-transform: uppercase; animation: fadeUp 0.6s ease 0.1s both; }
+    .page-hero h1 span { color: var(--primary); }
+    .page-hero > p { font-size: 18px; color: #aaa; margin-top: 15px; animation: fadeUp 0.6s ease 0.2s both; }
+    .contact-wrapper { max-width: 1100px; margin: 80px auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 1.6fr; gap: 60px; align-items: start; }
+    .contact-info-panel h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; margin-top: 10px; }
+    .contact-info-panel > p { color: var(--grey); font-size: 16px; line-height: 1.7; margin-bottom: 35px; }
+    .info-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
+    .info-icon { width: 46px; height: 46px; background: rgba(255,102,0,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .info-icon i { color: var(--primary); font-size: 18px; }
+    .info-item h4 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin-bottom: 4px; }
+    .info-item p { font-size: 16px; color: var(--dark); font-weight: 500; }
+    .social-row { display: flex; gap: 12px; margin-top: 35px; }
+    .social-btn { width: 44px; height: 44px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--grey); text-decoration: none; font-size: 18px; transition: background 0.3s, color 0.3s, transform 0.2s; }
+    .social-btn:hover { background: var(--primary); color: white; transform: translateY(-3px); }
+    .contact-form-panel { background: white; border: 2px solid #eee; border-radius: 16px; padding: 40px; }
+    .contact-form-panel h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 800; text-transform: uppercase; margin-bottom: 25px; }
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: #999; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.8px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 13px 16px; border: 2px solid #eee; border-radius: 8px; font-size: 15px; font-family: 'Barlow', sans-serif; color: var(--dark); transition: border-color 0.3s, box-shadow 0.3s; background: #fafafa; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,102,0,0.1); background: white; }
+    .form-group textarea { height: 130px; resize: vertical; }
+    .btn-primary { background: var(--primary); color: white; padding: 16px 32px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 4px 20px rgba(255,102,0,0.35); width: 100%; justify-content: center; font-family: 'Barlow', sans-serif; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,102,0,0.45); }
+    .success-msg { display: none; background: #e8f5e9; border: 2px solid #4caf50; border-radius: 10px; padding: 20px; text-align: center; color: #2e7d32; margin-top: 20px; }
+    .success-msg i { font-size: 28px; margin-bottom: 8px; display: block; }
+    .success-msg p { font-weight: 600; }
+    footer { background: #111; color: #777; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 80px; }
+    footer p { font-size: 14px; }
+    .footer-socials a { color: #555; text-decoration: none; margin-left: 15px; font-size: 18px; transition: color 0.3s, transform 0.3s; display: inline-block; }
+    .footer-socials a:hover { color: var(--primary); transform: scale(1.2); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .contact-wrapper { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      nav { padding: 0 20px; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-socials a { margin: 0 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader"><div class="spinner"></div></div>
+  <button id="scrollBtn" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><i class="fas fa-wrench"></i></div>
+      <span>FixIt<em>Pro</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="active">Contact</a>
+      <a href="contact.html" class="nav-cta">Get a Free Quote</a>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="section-tag">Reach Out</div>
+    <h1>Get In <span>Touch</span></h1>
+    <p>We respond within 24 hours — usually much faster.</p>
+  </div>
+
+  <div class="contact-wrapper">
+    <div class="contact-info-panel">
+      <div class="section-tag">Contact Details</div>
+      <h2>Let's Talk About Your Job</h2>
+      <p>Whether you need a quick repair or a full installation, we'd love to hear from you. Fill out the form or reach us directly below.</p>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-phone"></i></div>
+        <div><h4>Phone</h4><p>(555) 000-0000</p></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+        <div><h4>Email</h4><p>hello@fixitpro.com</p></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div><h4>Location</h4><p>[Your City], [Your Province/State]</p></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-clock"></i></div>
+        <div><h4>Hours</h4><p>Mon–Fri: 7am – 6pm<br>Sat: 8am – 3pm</p></div>
+      </div>
+      <div class="social-row">
+        <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+
+    <div class="contact-form-panel">
+      <h3>Request a Free Quote</h3>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="firstName" placeholder="John"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="lastName" placeholder="Smith"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="(555) 000-0000"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="john@email.com"></div>
+      </div>
+      <div class="form-group">
+        <label>Service Needed</label>
+        <select id="service">
+          <option value="">Select a service...</option>
+          <option>Electrical</option>
+          <option>Plumbing</option>
+          <option>General Trade</option>
+          <option>Not sure — I'll explain below</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Budget (optional)</label>
+        <input type="text" id="budget" placeholder="e.g. $200 – $500">
+      </div>
+      <div class="form-group">
+        <label>Describe the Job</label>
+        <textarea id="message" placeholder="Tell us what needs doing — the more detail the better..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitForm()">
+        <i class="fas fa-paper-plane"></i> Send My Request
+      </button>
+      <div class="success-msg" id="successMsg">
+        <i class="fas fa-check-circle"></i>
+        <p>Message sent! We'll be in touch within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 FixIt Pro. All rights reserved.</p>
+    <div class="footer-socials">
+      <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
+      <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+      <a href="#"><i class="fab fa-twitter fa-lg"></i></a>
+      <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    window.onload = function() { const l = document.getElementById('loader'); l.classList.add('hidden'); setTimeout(() => l.style.display = 'none', 500); };
+    window.onscroll = function() { document.getElementById('scrollBtn').style.display = window.scrollY > 200 ? 'block' : 'none'; };
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    async function submitForm() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const phone     = document.getElementById('phone').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const service   = document.getElementById('service').value;
+      const budget    = document.getElementById('budget').value.trim();
+      const message   = document.getElementById('message').value.trim();
+
+      if (!firstName) { highlight('firstName', 'Please enter your first name.'); return; }
+      if (!phone && !email) { alert('Please enter a phone number or email so we can reach you.'); return; }
+      if (!service) { alert('Please select a service.'); return; }
+      if (!message) { highlight('message', 'Please describe the job.'); return; }
+
+      // ✅ Clean single Formspree URL — sends to your inbox
+      const response = await fetch('https://formspree.io/f/meergbkq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, phone, email, service, budget, message })
+      });
+
+      if (response.ok) {
+        document.getElementById('successMsg').style.display = 'block';
+        document.querySelector('.btn-primary').style.display = 'none';
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    }
+
+    function highlight(id, msg) {
+      const el = document.getElementById(id);
+      el.style.borderColor = '#e53935';
+      el.focus();
+      alert(msg);
+      setTimeout(() => el.style.borderColor = '#eee', 3000);
+    }
+  </script>
+</body>
+</html>
